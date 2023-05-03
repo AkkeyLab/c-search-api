@@ -20,6 +20,18 @@ func getCompanies(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, companies)
 }
 
+func getCompanyById(c *gin.Context) {
+	id := c.Param("id")
+
+	for _, cm := range companies {
+		if cm.ID == id {
+			c.IndentedJSON(http.StatusOK, cm)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Company not found"})
+}
+
 func postCompanies(c *gin.Context) {
 	var createCompany company
 
@@ -34,6 +46,7 @@ func postCompanies(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.GET("/companies", getCompanies)
+	router.GET("/companies/:id", getCompanyById)
 	router.POST("/companies", postCompanies)
 
 	router.Run("localhost:8080")
