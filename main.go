@@ -20,9 +20,21 @@ func getCompanies(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, companies)
 }
 
+func postCompanies(c *gin.Context) {
+	var createCompany company
+
+	if err := c.BindJSON(&createCompany); err != nil {
+		return
+	}
+
+	companies = append(companies, createCompany)
+	c.IndentedJSON(http.StatusOK, createCompany)
+}
+
 func main() {
 	router := gin.Default()
 	router.GET("/companies", getCompanies)
+	router.POST("/companies", postCompanies)
 
 	router.Run("localhost:8080")
 }
